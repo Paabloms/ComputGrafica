@@ -11,8 +11,8 @@ package src;
  */
 public class Normalizar {
    
-    private double ndcx, ndcy,Xmax, Xmin, Ymax, Ymin;
-    private int ndh, ndv, dcx, dcy;
+    public double ndcx, ndcy,Xmax, Xmin, Ymax, Ymin, dcx, dcy;
+    private int ndh, ndv;
     
     public Normalizar(int buffWidth, int buffHeight)
     {
@@ -24,21 +24,27 @@ public class Normalizar {
         this.ndv = buffHeight;
     }
 
-    public Coordenada getDcxDcy(double mundoX, double mundoY) {
+    /*
+        O método getCoordDispositivo() recebe como parâmetro um objeto que representa o ponto(x,y) no sistema de coordenadas do mundo 
+        Retorna um objeto que representa o ponto(x,y) no sitema de coordenadas do dispositivo
+    */
+    public Ponto getCoordDispositivo(Ponto coordDoMundo) {
        
-        userToNdc(mundoX,mundoY);
-        return ndcToDc();      
+        userToNdc(coordDoMundo);
+        Ponto coordDoDispositivo = ndcToDc();
+        return coordDoDispositivo;      
     }
 
-    private void userToNdc(double mundoX, double mundoY) {
-        ndcy = ((mundoY - Ymin) / (Ymax - Ymin));
-        ndcx = ((mundoX - Xmin) / (Xmax - Xmin));
+    
+    private void userToNdc(Ponto coordDoMundo) {
+        ndcy = ((coordDoMundo.getY() - Ymin) / (Ymax - Ymin));
+        ndcx = ((coordDoMundo.getX() - Xmin) / (Xmax - Xmin));
     }
 
-    private Coordenada ndcToDc() {
-        dcx = (int) Math.round(ndcx*(ndh-1));
-        dcy = (int) Math.round(ndcy*(ndv-1));
+    private Ponto ndcToDc() {
+        dcx = ndcx*(ndh-1);
+        dcy = ndcy*(ndv-1);
         
-        return new Coordenada(dcx,dcy);
+        return new Ponto(dcx,dcy);
     }   
 }
